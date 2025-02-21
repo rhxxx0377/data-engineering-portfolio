@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データダッシュボード</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">データダッシュボード</h1>
+
+        <!-- ナビゲーション -->
+        <nav class="mb-4">
+            <a href="{{ url_for('home') }}" class="btn btn-outline-primary">ホームに戻る</a>
+        </nav>
+
+        <!-- 株価データ -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="h5 mb-0">株価情報</h2>
+            </div>
+            <div class="card-body">
+                {% if stock %}
+                <p>銘柄: {{ stock.symbol }}</p>
+                <p>価格: ${{ stock.price }}</p>
+                <p>取得時刻: {{ stock.timestamp }}</p>
+                <img src="{{ url_for('static', filename='stock_price.png') }}" alt="株価グラフ" class="img-fluid mt-3">
+                {% else %}
+                <p>株価データを取得できませんでした</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ニュース -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0">最新ニュース</h2>
+            </div>
+            <div class="card-body">
+                {% if news %}
+                <ul class="list-group">
+                    {% for item in news %}
+                    <li class="list-group-item">
+                        <a href="{{ item.link }}" target="_blank">{{ item.title }}</a>
+                        <small class="text-muted d-block">{{ item.scraped_at }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>ニュースを取得できませんでした</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

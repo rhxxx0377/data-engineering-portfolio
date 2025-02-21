@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yahoo!ニュース</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Yahoo!ニュース</h1>
+
+        <!-- ナビゲーション -->
+        <nav class="mb-4">
+            <a href="{{ url_for('home') }}" class="btn btn-outline-primary">ホームに戻る</a>
+            <a href="{{ url_for('stock_dashboard') }}" class="btn btn-outline-success">株価データへ</a>
+        </nav>
+
+        <!-- ニュース一覧 -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2 class="h5 mb-0">最新ニュース</h2>
+            </div>
+            <div class="card-body">
+                {% if news %}
+                <div class="list-group">
+                    {% for item in news %}
+                    <a href="{{ item.link }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ item.title }}</h5>
+                            <small class="text-muted">{{ item.scraped_at }}</small>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>ニュースを取得できませんでした</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
