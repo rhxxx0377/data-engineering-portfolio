@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# data-engineering-portfolio
-Python × データパイプライン × 可視化のポートフォリオ
-=======
 # データエンジニアリングポートフォリオ
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
@@ -82,16 +78,41 @@ python -m flask --app flask-user-app/app.py run
 ## プロジェクト構造
 ```
 portfolio-projects/
-├── data_pipeline/          # データ取得・処理関連
-│   ├── stock_data.py      # 株価データ取得
-│   ├── visualize.py       # データ可視化
-│   └── save_to_sql.py     # DB保存
-├── web_scraping/          # Webスクレイピング関連
-│   └── scrape_yahoo_news.py
-└── flask-user-app/        # Webアプリケーション
-    ├── app.py             # メインアプリケーション
-    ├── models.py          # データモデル
-    └── templates/         # HTMLテンプレート
+├── __init__.py         # Pythonパッケージ設定
+├── .env.example        # 環境変数の例
+├── .gitignore         # Git除外設定
+├── .python-version    # pyenvのPythonバージョン設定
+├── .zshrc             # Zshシェル設定
+├── LICENSE            # MITライセンス
+├── README.md          # プロジェクト説明
+├── requirements.txt   # 依存パッケージ一覧
+├── data_pipeline/     # データ取得・処理関連
+│   ├── __init__.py
+│   ├── stock_data.py  # 株価データ取得
+│   ├── visualize.py   # データ可視化
+│   ├── save_to_sql.py # DB保存
+│   └── stock_data.db  # SQLiteデータベース
+├── web_scraping/      # Webスクレイピング関連
+│   ├── __init__.py
+│   ├── scrape_yahoo_news.py
+│   └── scraped_data.csv
+└── flask-user-app/    # Webアプリケーション
+    ├── __init__.py
+    ├── app.py         # メインアプリケーション
+    ├── models.py      # データモデル
+    ├── forms.py       # フォーム定義
+    ├── database.db    # SQLiteデータベース
+    ├── static/        # 静的ファイル
+    │   └── stock_price.png
+    └── templates/     # HTMLテンプレート
+        ├── index.html
+        ├── dashboard.html
+        ├── news.html
+        ├── stock_dashboard.html
+        └── users.html
+
+注: venv/ ディレクトリは.gitignoreに含まれており、リポジトリには含まれません
+
 ```
 
 ## 開発者向け情報
@@ -102,4 +123,3 @@ portfolio-projects/
 
 ## ライセンス
 MIT License
->>>>>>> 9c9a3d6 (Initial commit: データエンジニアリングポートフォリオ)
