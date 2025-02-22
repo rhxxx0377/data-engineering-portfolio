@@ -1,81 +1,45 @@
-# データエンジニアリングポートフォリオ
+# 📊 データエンジニア向けポートフォリオ
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Flask](https://img.shields.io/badge/Flask-3.1.0-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+🚀 **プロジェクト概要**  
+このプロジェクトは、データエンジニアとしてのスキルを証明するためのポートフォリオです。  
+APIデータ取得、Webスクレイピング、データ保存、可視化、Webアプリケーションを組み合わせ、データパイプラインの基礎を構築しています。
 
-[スクリーンショットやデモ画像をここに配置]
+📌 **主な機能**
+- **APIデータ取得**（Financial Modeling Prep APIを使用した株価データ取得）
+- **Webスクレイピング**（YahooニュースRSSフィードからのデータ取得）
+- **データの保存**（SQLiteを使用したデータ管理）
+- **データの可視化**（Matplotlib, Pandasを使用）
+- **ユーザー管理機能**（Flask × SQLAlchemy × WTForms）
 
-Python × データパイプライン × 可視化を組み合わせた、データエンジニアリングのポートフォリオプロジェクトです。
+---
 
-## 機能概要
+## 🔧 セットアップ方法
+このプロジェクトをローカル環境で動作させるための手順です。
 
-### 1. データパイプライン
-- Financial Modeling Prep APIを使用した株価データの取得
-- SQLiteデータベースへのデータ保存
-- Matplotlibによるデータの可視化
-
-### 2. Webスクレイピング
-- Yahoo!ニュースRSSフィードからの最新ニュース取得
-- BeautifulSoupを使用したHTMLパース
-- CSVファイルへのデータ保存
-
-### 3. ユーザー管理機能
-- Flask × SQLAlchemyによるCRUD操作
-- WTFormsを使用したフォームバリデーション
-- ユーザー情報のデータベース管理
-
-## 技術スタック
-
-### バックエンド
-- Python 3.11.11
-- Flask 3.1.0
-- SQLAlchemy 3.1.1
-- WTForms 1.2.2
-
-### データ処理
-- Pandas 2.2.1
-- Matplotlib 3.8.3
-- BeautifulSoup4
-- Requests
-
-### データベース
-- SQLite3
-
-## セットアップ手順
-
-1. **環境構築**
+### 1️⃣ 必要なライブラリのインストール
 ```bash
-# Pythonバージョンの設定
-pyenv local 3.11.11
-
-# 仮想環境の作成と有効化
-python -m venv venv
+git clone https://github.com/your-username/data-engineering-portfolio.git
+cd data-engineering-portfolio
+pyenv local 3.11.11  # Pythonバージョンの設定
+python -m venv venv  # 仮想環境の作成
 source venv/bin/activate  # Windowsの場合: venv\Scripts\activate
-
-# 依存パッケージのインストール
-pip install -r requirements.txt
+pip install -r requirements.txt  # 必要ライブラリのインストール
 ```
 
-2. **環境変数の設定**
+### 2️⃣ 環境変数の設定
 ```bash
-# .envファイルを作成
-cp .env.example .env
-# SECRET_KEYを設定
+cp .env.example .env  # .envファイルを作成
+# SECRET_KEYなどを適切に設定
 ```
 
-3. **アプリケーションの起動**
+### 3️⃣ アプリケーションの起動
 ```bash
 python -m flask --app flask-user-app/app.py run
 ```
 
-## アクセス方法
-- メインページ: http://localhost:5000/
-- 株価データ: http://localhost:5000/stock-dashboard
-- ニュース一覧: http://localhost:5000/news
-- ユーザー一覧: http://localhost:5000/users
+---
 
-## プロジェクト構造
+## 📂 プロジェクト構造
 ```
 portfolio-projects/
 ├── __init__.py         # Pythonパッケージ設定
@@ -110,16 +74,39 @@ portfolio-projects/
         ├── news.html
         ├── stock_dashboard.html
         └── users.html
-
-注: venv/ ディレクトリは.gitignoreに含まれており、リポジトリには含まれません
-
 ```
 
-## 開発者向け情報
-- PEP 8スタイルガイドに準拠
-- エラーハンドリングの実装
-- CSRFトークンによるセキュリティ対策
-- 環境変数による設定管理
+---
 
-## ライセンス
+## 📌 使用技術
+- **Python 3.11.11**
+- **Flask 3.1.0**（Webアプリケーション）
+- **SQLAlchemy 3.1.1**（ORM）
+- **WTForms 1.2.2**（フォームバリデーション）
+- **Pandas 2.2.1, Matplotlib 3.8.3**（データ処理・可視化）
+- **BeautifulSoup4, Requests**（スクレイピング）
+- **SQLite3**（データベース）
+
+---
+
+## 💡 想定ユースケース
+- **データエンジニアの基礎スキル証明**（APIデータ取得・スクレイピング・データ保存・可視化）
+- **業務のデータ収集と自動化**（例えば、Yahoo RSSフィードを用いたニュース解析）
+- **クラウド対応（今後の拡張）**（AWS S3やGCP BigQueryとの連携も検討可能）
+
+---
+
+## 🏆 今後の拡張（ToDo）
+✅ AWS S3やGCP BigQueryへのデータアップロード機能  
+✅ データ分析機能の強化（時系列予測、機械学習モデルとの統合）  
+✅ FastAPIを導入し、データ取得・可視化APIを提供  
+
+---
+
+## 📬 お問い合わせ
+質問やフィードバックがありましたら、[GitHub Issues](https://github.com/your-username/data-engineering-portfolio/issues) に投稿してください。
+
+---
+
+## 📜 ライセンス
 MIT License
