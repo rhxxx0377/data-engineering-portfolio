@@ -6,6 +6,7 @@ from flask import (
     redirect,
     url_for,
     send_from_directory,
+    jsonify,
 )
 from models import db, User
 from forms import UserForm
@@ -50,33 +51,6 @@ compress = Compress()
 compress.init_app(app)
 
 
-# メインページ（ユーザー登録フォーム）
-@app.route("/", methods=["GET", "POST"])
-def home():
-    form = UserForm()
-    if form.validate_on_submit():
-        try:
-            new_user = User(name=form.name.data, email=form.email.data)
-            db.session.add(new_user)
-            db.session.commit()
-            return redirect(url_for("users"))
-        except Exception as e:
-            print(f"ユーザー登録エラー: {e}")
-            db.session.rollback()
-    return render_template("index.html", form=form)
-
-
-# ユーザー一覧ページ（GETリクエストのみ）
-@app.route("/users")
-def users():
-    try:
-        all_users = User.query.all()
-        return render_template("users.html", users=all_users)
-    except Exception as e:
-        print(f"ユーザー一覧取得エラー: {e}")
-        return "データベースエラーが発生しました", 500
-
-
 # キャッシュ用の変数
 stock_cache = None
 news_cache = None
@@ -99,6 +73,46 @@ def get_cached_news():
     return news_cache
 
 
+# メインページ（ユーザー登録フォーム）
+@app.route("/", methods=["GET", "POST"])
+def home():
+    form = UserForm()
+    if form.validate_on_submit():
+        try:
+            new_user = User(name=form.name.data, email=form.email.data)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("users"))
+        except Exception as e:
+            print(f"ユーザー登録エラー: {e}")
+            db.session.rollback()
+    return render_template("index.html", form=form)
+
+
+# ユーザー一覧ページ
+@app.route("/users")
+def users():
+    try:
+        all_users = User.query.all()
+        return render_template("users.html", users=all_users)
+    except Exception as e:
+        print(f"ユーザー一覧取得エラー: {e}")
+        return "データベースエラーが発生しました", 500
+
+
+# ニュースページ
+@app.route("/news")
+@csrf.exempt
+def news():
+    """ニュース一覧"""
+    try:
+        news_data = get_cached_news()
+        return render_template("news.html", news=news_data)
+    except Exception as e:
+        print(f"ニュース表示エラー: {e}")
+        return "ニュースの取得中にエラーが発生しました", 500
+
+
 # ダッシュボードページ
 @app.route("/dashboard", methods=["GET"])
 @csrf.exempt
@@ -107,6 +121,13 @@ def dashboard():
     try:
         # 株価データを取得して保存
         stock_data = get_cached_stock_data()
+        if stock_data and stock_data[0]:
+            # UNIXタイムスタンプを日時に変換
+            timestamp = datetime.fromtimestamp(stock_data[0]["timestamp"])
+            # 日本時間で表示
+            time_format = "%Y-%m-%d %H:%M:%S JST"
+            stock_data[0]["formatted_time"] = timestamp.strftime(time_format)
+
         if stock_data:
             # グラフを生成
             create_graph()
@@ -122,7 +143,15 @@ def dashboard():
         return "データの取得中にエラーが発生しました", 500
 
 
-# ユーザー削除機能を追加
+# stock_dashboardのエイリアス
+@app.route("/stock_dashboard", methods=["GET"])
+@csrf.exempt
+def stock_dashboard():
+    """株価データダッシュボードのエイリアス"""
+    return dashboard()
+
+
+# ユーザー削除機能
 @app.route("/delete_user/<int:user_id>", methods=["POST"])
 def delete_user(user_id):
     try:
@@ -136,22 +165,7 @@ def delete_user(user_id):
         return "削除中にエラーが発生しました", 500
 
 
-# データベースの初期化
-def init_db():
-    with app.app_context():
-        try:
-            db.create_all()
-            print("データベースを初期化しました")
-        except Exception as e:
-            print(f"データベース初期化エラー: {e}")
-
-
-# アプリケーション起動時にDBを初期化
-with app.app_context():
-    init_db()
-
-
-# 静的ファイルへのルートを追加
+# 静的ファイルへのルート
 @app.route("/static/<path:filename>")
 @csrf.exempt
 def serve_static(filename):
@@ -164,42 +178,46 @@ def serve_static(filename):
     return send_from_directory(app.static_folder, filename)
 
 
-# 株価ダッシュボードページ
-@app.route("/stock-dashboard", methods=["GET"])
-@csrf.exempt
-def stock_dashboard():
-    """株価データダッシュボード"""
-    try:
-        stock_data = get_cached_stock_data()
-        if stock_data and stock_data[0]:
-            # UNIXタイムスタンプを日時に変換
-            timestamp = datetime.fromtimestamp(stock_data[0]["timestamp"])
-            # 日本時間で表示
-            time_format = "%Y-%m-%d %H:%M:%S JST"
-            stock_data[0]["formatted_time"] = timestamp.strftime(time_format)
-
-        if stock_data:
-            create_graph()
-
-        stock = stock_data[0] if stock_data else None
-        return render_template("stock_dashboard.html", stock=stock)
-    except Exception as e:
-        print(f"株価データ表示エラー: {e}")
-        return "データの取得中にエラーが発生しました", 500
+# 403エラーハンドラー
+@app.errorhandler(403)
+def forbidden_error(error):
+    return (
+        jsonify(
+            {
+                "error": "アクセスが拒否されました",
+                "message": "アプリケーションが正常に起動していないか、セッションが期限切れの可能性があります。",
+                "status": 403,
+            }
+        ),
+        403,
+    )
 
 
-# ニュースページ
-@app.route("/news", methods=["GET"])
-@csrf.exempt
-def news():
-    """ニュース一覧"""
-    try:
-        news_data = get_cached_news()
-        return render_template("news.html", news=news_data)
-    except Exception as e:
-        print(f"ニュース表示エラー: {e}")
-        return "ニュースの取得中にエラーが発生しました", 500
+# ヘルスチェックエンドポイント
+@app.route("/health")
+def health_check():
+    timestamp = datetime.now().isoformat()
+    return jsonify({"status": "healthy", "timestamp": timestamp})
 
 
+# データベースの初期化
+def init_db():
+    with app.app_context():
+        try:
+            db.create_all()
+            print("データベースを初期化しました")
+        except Exception as e:
+            print(f"データベース初期化エラー: {e}")
+
+
+# アプリケーション起動時にDBを初期化
 if __name__ == "__main__":
-    app.run(debug=True)
+    with app.app_context():
+        try:
+            db.create_all()
+            print("データベースを初期化しました")
+        except Exception as e:
+            print(f"データベース初期化エラー: {e}")
+
+    # デバッグモードを有効にし、ホストを指定
+    app.run(debug=True, host="127.0.0.1", port=5000)
