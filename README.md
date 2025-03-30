@@ -16,6 +16,7 @@ APIデータ取得、Webスクレイピング、データ保存、可視化、We
 - **型安全性の向上**（型ヒントの導入によるコード品質の改善）
 - **パフォーマンスの最適化**（データキャッシング、非同期処理の導入）
 - **コードの可読性向上**（PEP 8準拠、関数の分割と最適化）
+- **UIの改善**（ダッシュボードとニュース一覧の分離、ナビゲーションの最適化）
 
 ---
 
@@ -40,12 +41,21 @@ cp .env.example .env  # .envファイルを作成
 
 ### 3️⃣ アプリケーションの起動
 ```bash
-python -m flask --app flask-user-app/app.py run
+python -m flask --app flask-user-app/app.py run --port 8080
+# または
+cd flask-user-app && python app.py
 ```
 
-⚠️ **注意**: macOSでポート5000が使用中の場合
-1. システム設定 → 一般 → AirDropとハンドオフ
-2. 「AirPlay Receiver」をオフにする
+⚠️ **注意**: 
+- デフォルトでポート8080を使用します
+- ポートが使用中の場合は、`app.py`の`port`パラメータを変更してください
+- macOSでポート5000を使用する場合は、システム設定 → 一般 → AirDropとハンドオフから「AirPlay Receiver」をオフにする必要があります
+
+### 4️⃣ アクセス方法
+- メインページ: `http://127.0.0.1:8080`
+- データダッシュボード: `http://127.0.0.1:8080/stock_dashboard`
+- ニュース一覧: `http://127.0.0.1:8080/news`
+- ユーザー管理: `http://127.0.0.1:8080/users`
 
 ---
 
@@ -121,5 +131,5 @@ portfolio-projects/
 
 ---
 
-## ライセンス
+## �� ライセンス
 MIT License
