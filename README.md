@@ -11,6 +11,12 @@ APIデータ取得、Webスクレイピング、データ保存、可視化、We
 - **データの可視化**（Matplotlib, Pandasを使用）
 - **ユーザー管理機能**（Flask × SQLAlchemy × WTForms）
 
+🆕 **最新の改善点**
+- **スクレイピング機能の強化**（XMLパーサーの最適化、エラーハンドリングの改善）
+- **型安全性の向上**（型ヒントの導入によるコード品質の改善）
+- **パフォーマンスの最適化**（データキャッシング、非同期処理の導入）
+- **コードの可読性向上**（PEP 8準拠、関数の分割と最適化）
+
 ---
 
 ## 🔧 セットアップ方法
@@ -37,6 +43,10 @@ cp .env.example .env  # .envファイルを作成
 python -m flask --app flask-user-app/app.py run
 ```
 
+⚠️ **注意**: macOSでポート5000が使用中の場合
+1. システム設定 → 一般 → AirDropとハンドオフ
+2. 「AirPlay Receiver」をオフにする
+
 ---
 
 ## 📂 プロジェクト構造
@@ -58,7 +68,7 @@ portfolio-projects/
 │   └── stock_data.db  # SQLiteデータベース
 ├── web_scraping/      # Webスクレイピング関連
 │   ├── __init__.py
-│   ├── scrape_yahoo_news.py
+│   ├── scrape_yahoo_news.py  # 最適化済みスクレイピング
 │   └── scraped_data.csv
 └── flask-user-app/    # Webアプリケーション
     ├── __init__.py
@@ -84,8 +94,9 @@ portfolio-projects/
 - **SQLAlchemy 3.1.1**（ORM）
 - **WTForms 1.2.2**（フォームバリデーション）
 - **Pandas 2.2.1, Matplotlib 3.8.3**（データ処理・可視化）
-- **BeautifulSoup4, Requests**（スクレイピング）
+- **BeautifulSoup4, lxml**（スクレイピング、XMLパース）
 - **SQLite3**（データベース）
+- **typing**（型ヒント）
 
 ---
 
@@ -100,6 +111,8 @@ portfolio-projects/
 ✅ AWS S3やGCP BigQueryへのデータアップロード機能  
 ✅ データ分析機能の強化（時系列予測、機械学習モデルとの統合）  
 ✅ FastAPIを導入し、データ取得・可視化APIを提供  
+✅ 非同期処理の導入によるパフォーマンス最適化
+✅ テスト自動化とCI/CDパイプラインの構築
 
 ---
 
@@ -108,5 +121,5 @@ portfolio-projects/
 
 ---
 
-## 📜 ライセンス
+## ライセンス
 MIT License
